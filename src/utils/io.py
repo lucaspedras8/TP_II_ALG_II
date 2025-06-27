@@ -37,9 +37,9 @@ def load_instance(path: str | Path):
             n, capacity = map(int, header)
             values, weights = [], []
             for _ in range(n):
-                v, w = map(int, f.readline().split())
-                values.append(v)
-                weights.append(w)
+                v, w = map(float, f.readline().split())
+                values.append(int(round(v)))
+                weights.append(int(round(w)))
             return np.array(weights), np.array(values), capacity
 
         elif len(header) == 1:                           # simples
