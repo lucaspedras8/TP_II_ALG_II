@@ -1,0 +1,12 @@
+# ► ambientes
+.venv/
+__pycache__/
+
+# ► dados brutos grandes
+data/*.zip          # zips originais baixados
+data/low_dimensional-optimum/
+data/large_scale-optimum/
+
+# ► saídas geradas
+results/
+report/*.pdf
