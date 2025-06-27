@@ -6,6 +6,7 @@ __pycache__/
 data/*.zip          # zips originais baixados
 data/low_dimensional-optimum/
 data/large_scale-optimum/
+data/test
 
 # ► saídas geradas
 results/
