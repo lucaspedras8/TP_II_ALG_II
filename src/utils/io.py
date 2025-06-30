@@ -11,7 +11,7 @@ def load_instance(path: str | Path):
     Retorna (weights, values, capacity).
     """
     path = Path(path)
-
+    
     # --- large-scale CSV ---
     if path.suffix == ".csv":
         if not path.name.endswith("_info.csv"):
@@ -24,8 +24,14 @@ def load_instance(path: str | Path):
         info = pd.read_csv(path, header=None, names=["label", "value"])
         capacity = int(info.loc[info["label"] == "c", "value"].values[0])
 
-        items = pd.read_csv(items_f, header=None, names=["value", "weight"])
-        values  = items["value"].to_numpy(dtype=int)
+        # 1. Carrega o CSV tratando a primeira linha como cabeçalho
+        items = pd.read_csv(items_f, header=0)
+
+        # 2. Limpa os nomes das colunas para remover espaços extras
+        items.columns = [col.strip() for col in items.columns]
+
+        # 3. Usa os nomes corretos e limpos ('price' e 'weight') para pegar os dados
+        values  = items["price"].to_numpy(dtype=int)
         weights = items["weight"].to_numpy(dtype=int)
         return weights, values, capacity
 
