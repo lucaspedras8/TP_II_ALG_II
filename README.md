@@ -1,5 +1,31 @@
 # Trabalho Prático 2: Análise de Algoritmos para o Problema da Mochila
 
+<table>
+  <tr>
+    <td align="center">
+      <a href="#">
+        <sub>
+          <b><a href="https://github.com/joao-jcc">João Correia Costa</a></b>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="#">
+        <sub>
+          <b><a href="https://github.com/lucaspedras8">Lucas Ferreira Pedras</a></b>
+        </sub>
+      </a>
+    </td>
+     <td align="center">
+      <a href="#">
+        <sub>
+          <b><a href="https://github.com/LrcSantos">Lucas Rafael Costa Santos</a></b>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
 Este projeto foi desenvolvido para a disciplina DCC207 - Algoritmos 2 da UFMG. O objetivo é implementar, executar e analisar empiricamente o desempenho de diferentes algoritmos para resolver o Problema da Mochila (Knapsack Problem), um clássico problema NP-difícil.
 
 Foram implementadas três abordagens distintas:
@@ -121,31 +147,3 @@ O gráfico de memória mostra que o Branch-and-Bound e o FPTAS (com `ε` pequeno
 -   **Branch-and-Bound (`bnb.py`):** Algoritmo exato que explora o espaço de busca de forma inteligente, usando uma função de limite (relaxação fracionária) e uma busca *best-first* para encontrar a solução ótima.
 -   **2-Approximation (`two_approx.py`):** Algoritmo guloso aprimorado que retorna a melhor solução entre duas heurísticas: (1) o resultado da ordenação por razão valor/peso e (2) o item único de maior valor que cabe na mochila.
 -   **FPTAS (`fptas.py`):** Esquema de aproximação que permite ao usuário escolher a precisão (`ε`), escalonando os valores dos itens e resolvendo a instância simplificada com programação dinâmica.
-
-## Autores
-
-<table>
-  <tr>
-    <td align="center">
-      <a href="#">
-        <sub>
-          <b><a href="https://github.com/joao-jcc">João Correia Costa</a></b>
-        </sub>
-      </a>
-    </td>
-    <td align="center">
-      <a href="#">
-        <sub>
-          <b><a href="https://github.com/lucaspedras8">Lucas Ferreira Pedras</a></b>
-        </sub>
-      </a>
-    </td>
-     <td align="center">
-      <a href="#">
-        <sub>
-          <b><a href="https://github.com/LrcSantos">Lucas Rafael Costa Santos</a></b>
-        </sub>
-      </a>
-    </td>
-  </tr>
-</table>
