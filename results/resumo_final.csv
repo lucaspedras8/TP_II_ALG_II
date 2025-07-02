@@ -1,0 +1,7 @@
+alg_name,num_execucoes,num_timeouts,tempo_medio_ms,memoria_media_kb,fator_aprox_medio
+FPTAS (e=0.1),13,0,326560.04,619610.58,1.0
+FPTAS (e=0.3),13,0,111520.9,206551.95,1.0
+FPTAS (e=0.5),13,0,66189.93,123867.02,1.0
+FPTAS (e=0.8),13,0,41067.39,77374.86,1.0
+branch_and_bound,13,0,5996.63,29037.67,1.0
+two_approx,13,0,1.35,16.11,1.04
