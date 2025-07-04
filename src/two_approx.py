@@ -9,21 +9,21 @@ from time import perf_counter
 import numpy as np
 from src.greedy_ratio import solve as greedy_solve
 
+
 def solve(weights: np.ndarray, values: np.ndarray, capacity: int):
     t0 = perf_counter()
 
-    # A) melhor item isolado
-    mask  = weights <= capacity
+    # melhor item isolado
+    mask = weights <= capacity
     best_single_idx = np.argmax(values * mask)          # valor 0 se não cabe
-    single_value    = values[best_single_idx] if mask.any() else 0
+    single_value = values[best_single_idx] if mask.any() else 0
     single_decision = np.zeros(len(weights), dtype=int)
     if single_value > 0:
         single_decision[best_single_idx] = 1
 
-    # B) greedy
+    # greedy
     greedy_value, greedy_decision, _ = greedy_solve(weights, values, capacity)
 
-    # escolher
     if single_value >= greedy_value:
         best_val, decision = single_value, single_decision.tolist()
     else:

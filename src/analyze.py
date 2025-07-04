@@ -12,7 +12,7 @@ from pathlib import Path
 import numpy as np
 
 def main(csv_path: str):
-    # --- 1. Carregamento e Preparação dos Dados ---
+    # Carrega Dados
     print(f"Analisando o arquivo: {csv_path}")
     df = pd.read_csv(csv_path)
 
@@ -23,8 +23,7 @@ def main(csv_path: str):
     # Remove linhas onde a conversão para número falhou
     df.dropna(subset=['value', 'time_ms', 'peak_mem_kb'], inplace=True)
 
-    # Encontra o valor ótimo para cada instância (normalmente do B&B)
-    # .loc é usado para evitar SettingWithCopyWarning
+    # Encontra o valor ótimo para cada instância
     opt_indices = df.loc[df.groupby('instance')['value'].idxmax()].index
     opt_df = df.loc[opt_indices][['instance', 'value']].rename(columns={'value': 'value_opt'})
     
@@ -43,7 +42,7 @@ def main(csv_path: str):
         axis=1
     )
 
-    # --- 2. Geração do Dashboard Comparativo (Tempo e Qualidade) ---
+    # Dashboard Comparativo (Tempo e Qualidade)
     print("Gerando dashboard de Tempo e Qualidade...")
     sns.set_theme(style="whitegrid", palette="deep")
     fig, axes = plt.subplots(2, 2, figsize=(20, 16))
@@ -87,7 +86,7 @@ def main(csv_path: str):
     plt.close(fig)
     print(f"Dashboard salvo em: {out_path_fig}")
 
-    # --- 3. Geração do Gráfico Individual de Memória ---
+    # Geração do Gráfico Individual de Memória
     print("Gerando gráfico de Análise de Memória...")
     fig_mem, ax_mem = plt.subplots(figsize=(12, 8))
     
@@ -102,7 +101,7 @@ def main(csv_path: str):
     plt.close(fig_mem)
     print(f"Gráfico de Memória salvo em: {out_path_mem_fig}")
 
-    # --- 4. Geração do Resumo Estatístico Final ---
+    # Geração do Resumo Estatístico Final
     print("Gerando resumo estatístico detalhado...")
     summary = df.groupby('alg_name').agg(
         num_execucoes=('instance', 'nunique'),

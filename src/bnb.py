@@ -4,9 +4,8 @@ from typing import List, Tuple
 import heapq, time
 import numpy as np
 
-# ────────────────────────────────────────────────────────────────
+
 # Nó da árvore de Branch-and-Bound
-# ────────────────────────────────────────────────────────────────
 @dataclass(order=True)
 class Node:
     sort_key: float = field(init=False, repr=False)       # para heapq (bound negativo)
@@ -17,11 +16,10 @@ class Node:
     taken: List[int]                                      # 1 = item incluído
 
     def __post_init__(self):
-        object.__setattr__(self, "sort_key", -self.bound) # max-heap via bound negativo
+        object.__setattr__(self, "sort_key", -self.bound)  # max-heap via bound negativo
 
-# ────────────────────────────────────────────────────────────────
+
 # Bound fracionário (relaxação do knapsack fracionário)
-# ────────────────────────────────────────────────────────────────
 def fractional_bound(level: int, cur_w: int, cur_v: int,
                      weights: np.ndarray, values: np.ndarray,
                      capacity: int) -> float:
@@ -32,16 +30,15 @@ def fractional_bound(level: int, cur_w: int, cur_v: int,
     n = len(weights)
     for i in range(level, n):
         if w + weights[i] <= capacity:
-            w     += weights[i]
+            w += weights[i]
             bound += values[i]
         else:                               # pega fração do próximo item
             bound += (capacity - w) * values[i] / weights[i]
             break
     return bound
 
-# ────────────────────────────────────────────────────────────────
+
 # Função principal
-# ────────────────────────────────────────────────────────────────
 def solve(weights: np.ndarray,
           values:  np.ndarray,
           capacity: int) -> Tuple[int, List[int], float]:
@@ -53,7 +50,7 @@ def solve(weights: np.ndarray,
     weights, values = weights[order], values[order]
     n = len(weights)
 
-    best_val   = 0
+    best_val = 0
     best_taken = [0] * n
     pq: list[Node] = []
 

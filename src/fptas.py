@@ -17,19 +17,19 @@ def solve(weights: np.ndarray, values: np.ndarray, capacity: int, epsilon: float
     if n == 0:
         return 0, [], (perf_counter() - t0) * 1_000
 
-    # 1: Calcular fator de escala (μ) 
+    # Calcular fator de escala (μ)
     v_max = np.max(values)
     if v_max == 0: 
         return 0, [0] * n, (perf_counter() - t0) * 1_000
 
     mu = (epsilon * v_max) / n
 
-    # 2: Escalonar e arredondar os valores 
+    # Escalonar e arredondar os valores
     scaled_values = np.floor(values / mu).astype(int) if mu > 0 else np.zeros_like(values)
     
     v_prime_max_sum = int(np.sum(scaled_values))
 
-    # 3: Resolver com Programação Dinâmica
+    # Resolver com Programação Dinâmica
     M = np.full(v_prime_max_sum + 1, fill_value=np.inf)
     M[0] = 0
     
@@ -45,14 +45,14 @@ def solve(weights: np.ndarray, values: np.ndarray, capacity: int, epsilon: float
                 items_for_M[v_prime] = items_for_M[v_prime - v_prime_i] + [i]
 
 
-    # 4: Encontrar o melhor valor escalado que cabe na mochila
+    # Encontrar o melhor valor escalado que cabe na mochila
     possible_v_primes = np.where(M <= capacity)[0]
     if len(possible_v_primes) == 0: # Nenhum item coube
         return 0, [0] * n, (perf_counter() - t0) * 1_000
     
     best_v_prime = np.max(possible_v_primes)
 
-    # 5: Montar o resultado final 
+    # Montar o resultado final
     chosen_indices = items_for_M[best_v_prime]
     
     total_value = values[chosen_indices].sum()

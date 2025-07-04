@@ -6,6 +6,7 @@ Retorna (valor_total, vetor_0_1, tempo_ms).
 from time import perf_counter
 import numpy as np
 
+
 def solve(weights: np.ndarray, values: np.ndarray, capacity: int):
     t0 = perf_counter()
 
@@ -21,7 +22,7 @@ def solve(weights: np.ndarray, values: np.ndarray, capacity: int):
             total_w += w
             total_v += v
 
-    # reordenar p/ índices originais
+    # reordenar para os índices originais
     decision = np.zeros_like(chosen)
     decision[order] = chosen
 

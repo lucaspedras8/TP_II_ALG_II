@@ -3,18 +3,14 @@ import sys
 from pathlib import Path
 from time import perf_counter
 from multiprocessing import Process, Queue
-import tracemalloc  # <--- MUDANÇA: Importa a biblioteca de memória
-
+import tracemalloc
 import pandas as pd
 import numpy as np
-
-# ... (o resto das suas importações permanece o mesmo) ...
 from src.utils import io
 from src.bnb import solve as solve_bnb
 from src.fptas import solve as solve_fptas
 from src.two_approx import solve as solve_two_approx
 
-# ... (a seção de Configuração do Experimento permanece a mesma) ...
 ALGORITHMS = {
     "branch_and_bound": solve_bnb,
     "two_approx": solve_two_approx,
@@ -27,8 +23,6 @@ DATA_FOLDERS = [
 TIMEOUT_SECONDS = 30 * 60
 OUTPUT_CSV_PATH = "results/final_results.csv"
 
-
-# <--- MUDANÇA: A função auxiliar foi atualizada para medir memória ---
 def run_with_timeout_and_mem(func, args, timeout, result_queue):
     """
     Roda uma função em um processo separado, impõe um timeout, e mede o pico de memória.
@@ -37,22 +31,18 @@ def run_with_timeout_and_mem(func, args, timeout, result_queue):
         # Inicia o monitoramento de memória
         tracemalloc.start()
 
-        # Roda a função original (que já mede o tempo)
-        # O resultado esperado é (value, decision, time_ms)
         result_tuple = func(*args)
 
-        # Pega o pico de memória (em bytes) e para o monitoramento
         current, peak = tracemalloc.get_traced_memory()
         tracemalloc.stop()
 
         # Adiciona o pico de memória (convertido para KB) ao resultado
         peak_mem_kb = peak / 1024
-        final_result = result_tuple + (peak_mem_kb,) # Adiciona como o 4º elemento da tupla
+        final_result = result_tuple + (peak_mem_kb,)
         
         result_queue.put(final_result)
 
     except Exception as e:
-        # Em caso de erro, coloca a exceção na fila para ser tratada no processo principal
         result_queue.put(e)
 
 
@@ -76,17 +66,16 @@ def main():
             print(f"  -> Erro ao carregar instância: {e}")
             continue
 
-        # --- Roda os algoritmos padrão ---
+        # Roda os algoritmos padrão
         for alg_name, solve_func in ALGORITHMS.items():
             print(f"  -> Rodando {alg_name}...")
             
             result_queue = Queue()
-            # <--- MUDANÇA: Usa a nova função que mede memória
             p = Process(target=run_with_timeout_and_mem, args=(solve_func, (weights, values, capacity), TIMEOUT_SECONDS, result_queue))
             p.start()
             p.join(TIMEOUT_SECONDS)
 
-            # <--- MUDANÇA: Ajusta o tratamento do resultado para incluir a memória ---
+            # Ajusta o tratamento do resultado para incluir a memória
             if p.is_alive():
                 p.terminate(); p.join()
                 print(f"  -> TIMEOUT! ({TIMEOUT_SECONDS}s)")
@@ -97,27 +86,24 @@ def main():
                     print(f"  -> ERRO! {result}")
                     value, time_ms, peak_mem_kb = "ERROR", -1, -1
                 else:
-                    # Agora esperamos 4 valores: valor, decisão, tempo, e pico de memória
                     value, _, time_ms, peak_mem_kb = result
             
             results_list.append({
                 "instance": instance_path.name, "n": n, "algorithm": alg_name,
                 "epsilon": "NA", "value": value, "time_ms": time_ms,
-                "peak_mem_kb": peak_mem_kb # <--- MUDANÇA: Adiciona a nova coluna
+                "peak_mem_kb": peak_mem_kb
             })
 
-        # --- Roda o FPTAS para cada Epsilon (com medição de memória) ---
+        # Roda o FPTAS para cada Epsilon
         for eps in EPSILONS:
             alg_name = f"fptas"
             print(f"  -> Rodando {alg_name} (e={eps})...")
             
             result_queue = Queue()
-            # <--- MUDANÇA: Usa a nova função que mede memória
             p = Process(target=run_with_timeout_and_mem, args=(solve_fptas, (weights, values, capacity, eps), TIMEOUT_SECONDS, result_queue))
             p.start()
             p.join(TIMEOUT_SECONDS)
 
-            # <--- MUDANÇA: Ajusta o tratamento do resultado para incluir a memória ---
             if p.is_alive():
                 p.terminate(); p.join()
                 print(f"  -> TIMEOUT! ({TIMEOUT_SECONDS}s)")
@@ -133,7 +119,7 @@ def main():
             results_list.append({
                 "instance": instance_path.name, "n": n, "algorithm": alg_name,
                 "epsilon": eps, "value": value, "time_ms": time_ms,
-                "peak_mem_kb": peak_mem_kb # <--- MUDANÇA: Adiciona a nova coluna
+                "peak_mem_kb": peak_mem_kb
             })
 
     print("\nSalvando resultados...")
